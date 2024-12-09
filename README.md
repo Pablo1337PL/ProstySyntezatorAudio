@@ -1,0 +1,2 @@
+# ProstySyntezatorAudio
+Projekt na zpoif
