@@ -22,19 +22,20 @@ public class WaveVisualizer extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
-        g2d.setColor(Color.ORANGE);
+        g2d.setColor(Color.GREEN);
 
         if (isActive && currentSamples.length > 0) {
             int width = getWidth();
             int height = getHeight();
-            int midY = height/2;
+            int midY = height / 2;
 
+            // Skalowanie wartości próbek do wysokości panelu
             int[] xPoints = new int[currentSamples.length];
             int[] yPoints = new int[currentSamples.length];
 
             for (int i = 0; i < currentSamples.length; i++) {
                 xPoints[i] = (int) ((double) i / currentSamples.length * width);
-                yPoints[i] = midY - (int) (currentSamples[i] * midY);
+                yPoints[i] = midY - (int) (currentSamples[i] * midY); // Próbki skalowane do połowy wysokości
             }
 
             // Rysowanie fali
