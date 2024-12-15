@@ -91,6 +91,9 @@ public class SynthApp {
         frame.add(visualizationPanel, BorderLayout.CENTER);
         frame.add(eastPanel, BorderLayout.EAST);
         //frame.add(fxPanel, BorderLayout.SOUTH);
+        
+        PianoPanel pianoPanel = new PianoPanel();
+        frame.add(pianoPanel, BorderLayout.SOUTH);
 
 
 
@@ -120,7 +123,7 @@ public class SynthApp {
                         isKeyPressed = true;
                     }
                 }
-
+                pianoPanel.pressKey(e.getKeyCode());
                 //panel pianina
             }
 
@@ -130,11 +133,38 @@ public class SynthApp {
                     soundGenerator.stopSound();
                     isKeyPressed = false;
                 }
-
+                pianoPanel.releaseKey(e.getKeyCode());
                 //panel pianina
 
             }
         });
+        
+        //added mouse Listener, gets the key code from the piano class
+        //not working atm
+        frame.addMouseListener(new MouseAdapter() {
+            @Override
+			public void mousePressed(MouseEvent e) {
+            	int keyCode = pianoPanel.mouseClick(e.getPoint());
+				if (keyToFrequencyMap.containsKey(keyCode)) {
+					if (!isKeyPressed) {
+						double freq = keyToFrequencyMap.get(keyCode);
+						soundGenerator.setBaseFrequency(freq);
+						soundGenerator.startSound();
+						isKeyPressed = true;
+					}
+				}
+			}
+            
+            @Override
+			public void mouseReleased(MouseEvent e) {
+            	int keyCode = pianoPanel.mouseReleased(e.getPoint());
+				if (keyToFrequencyMap.containsKey(keyCode)) {
+					soundGenerator.stopSound();
+					isKeyPressed = false;
+				}
+			}
+        });
+        
 
         frame.setFocusable(true);
         frame.requestFocusInWindow();
