@@ -7,6 +7,7 @@ import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -37,9 +38,6 @@ public class SynthApp {
     EnvelopePanel envelopePanel;
 
 
-
-
-
     private Map<Integer, Double> keyToFrequencyMap = new HashMap<>();
     private boolean isKeyPressed = false;
 
@@ -62,7 +60,6 @@ public class SynthApp {
 //        keyToFrequencyMap.put(KeyEvent.VK_I, 830.61);
 //        keyToFrequencyMap.put(KeyEvent.VK_K, 880.00);
         
-
         keyToFrequencyMap.put(KeyEvent.VK_A, 440.00); //KeyEvent.VK_A 0
         keyToFrequencyMap.put(KeyEvent.VK_W, 466.16); //KeyEvent.VK_W 1
         keyToFrequencyMap.put(KeyEvent.VK_S, 493.88); //KeyEvent.VK_S 2
@@ -322,9 +319,32 @@ public class SynthApp {
 
 
 
-    //panel zapisu
+    //stary panel zapisu
+//    private JMenuBar createMenuBar() {
+//        JMenuBar menuBar = new JMenuBar();
+//        JMenu fileMenu = new JMenu("File");
+//
+//        JMenuItem saveItem = new JMenuItem("Save Preset");
+//        saveItem.addActionListener(e -> savePreset());
+//
+//        JMenuItem loadItem = new JMenuItem("Load Preset");
+//        loadItem.addActionListener(e -> loadPreset());
+//
+//        JMenuItem randomizeItem = new JMenuItem("Randomize Preset");
+//        randomizeItem.addActionListener(e -> randomizePreset());
+//
+//        fileMenu.add(saveItem);
+//        fileMenu.add(loadItem);
+//        fileMenu.add(randomizeItem);
+//
+//        menuBar.add(fileMenu);
+//        return menuBar;
+//    }
+    ////////////////////////////////////
+    
     private JMenuBar createMenuBar() {
         JMenuBar menuBar = new JMenuBar();
+        
         JMenu fileMenu = new JMenu("File");
 
         JMenuItem saveItem = new JMenuItem("Save Preset");
@@ -341,9 +361,110 @@ public class SynthApp {
         fileMenu.add(randomizeItem);
 
         menuBar.add(fileMenu);
+
+        // Presets Menu
+        JMenu presetsMenu = new JMenu("Presets");
+        addPresetNavigation(presetsMenu);
+
+        // Add dynamic population on menu opening
+        presetsMenu.addMenuListener(new javax.swing.event.MenuListener() {
+            @Override
+            public void menuSelected(javax.swing.event.MenuEvent e) {
+                populatePresetsMenu(presetsMenu, "./presets/");
+            }
+
+            @Override
+            public void menuDeselected(javax.swing.event.MenuEvent e) {}
+
+            @Override
+            public void menuCanceled(javax.swing.event.MenuEvent e) {}
+        });
+
+        menuBar.add(presetsMenu);
+
         return menuBar;
     }
 
+    private ArrayList<File> presetFiles = new ArrayList<>();
+    private int currentPresetIndex = -1;
+
+    private void addPresetNavigation(JMenu presetsMenu) {
+        JMenuItem nextPresetItem = new JMenuItem("Next Preset");
+        nextPresetItem.addActionListener(e -> loadNextPreset());
+        presetsMenu.add(nextPresetItem);
+
+        JMenuItem previousPresetItem = new JMenuItem("Previous Preset");
+        previousPresetItem.addActionListener(e -> loadPreviousPreset());
+        presetsMenu.add(previousPresetItem);
+
+        presetsMenu.addSeparator(); // Separator between navigation and list
+    }
+
+    private void populatePresetsMenu(JMenu presetsMenu, String directoryPath) {
+        // Remove all existing menu items except navigation buttons and separator
+        int menuStartIndex = 2; // Keeps "Next", "Previous", and separator
+        while (presetsMenu.getItemCount() > menuStartIndex) {
+            presetsMenu.remove(menuStartIndex);
+        }
+
+        File presetsDir = new File(directoryPath);
+        presetFiles.clear(); // Clear the existing preset list
+
+        if (presetsDir.exists() && presetsDir.isDirectory()) {
+            File[] files = presetsDir.listFiles();
+            if (files != null && files.length > 0) {
+                for (File file : files) {
+                    if (file.isFile()) { // Only process files
+                        presetFiles.add(file);
+                        JMenuItem presetItem = new JMenuItem(file.getName());
+                        presetItem.addActionListener(e -> loadPresetFromFile(file));
+                        presetsMenu.add(presetItem);
+                    }
+                }
+            } else {
+                JMenuItem noPresetsItem = new JMenuItem("No presets found");
+                noPresetsItem.setEnabled(false);
+                presetsMenu.add(noPresetsItem);
+            }
+        } else {
+            JMenuItem errorItem = new JMenuItem("Presets directory not found");
+            errorItem.setEnabled(false);
+            presetsMenu.add(errorItem);
+        }
+    }
+
+    private void loadNextPreset() {
+        if (presetFiles.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "No presets available");
+            return;
+        }
+        currentPresetIndex = (currentPresetIndex + 1) % presetFiles.size();
+        loadPresetFromFile(presetFiles.get(currentPresetIndex));
+    }
+
+    private void loadPreviousPreset() {
+        if (presetFiles.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "No presets available");
+            return;
+        }
+        currentPresetIndex = (currentPresetIndex - 1 + presetFiles.size()) % presetFiles.size();
+        loadPresetFromFile(presetFiles.get(currentPresetIndex));
+    }
+
+    private void loadPresetFromFile(File presetFile) {
+        try {
+            SynthSettings settings = PresetManager.loadSettings(presetFile);
+            settings.applyTo(soundGenerator, this);
+            JOptionPane.showMessageDialog(null, "Preset loaded: " + presetFile.getName());
+        } catch (IOException | ClassNotFoundException ex) {
+            JOptionPane.showMessageDialog(null, "Error loading preset: " + ex.getMessage());
+        }
+    }
+
+
+
+    
+///////////////////////////////////////////
 
 
 
