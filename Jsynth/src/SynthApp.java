@@ -46,21 +46,37 @@ public class SynthApp {
     public SynthApp() {
         soundGenerator = new SoundGenerator();
         waveVisualizer = new WaveVisualizer();
+        
+        //stare mapowanie
+//        keyToFrequencyMap.put(KeyEvent.VK_A, 440.00);
+//        keyToFrequencyMap.put(KeyEvent.VK_W, 466.16);
+//        keyToFrequencyMap.put(KeyEvent.VK_S, 493.88);
+//        keyToFrequencyMap.put(KeyEvent.VK_D, 523.25);
+//        keyToFrequencyMap.put(KeyEvent.VK_R, 554.37);
+//        keyToFrequencyMap.put(KeyEvent.VK_F, 587.33);
+//        keyToFrequencyMap.put(KeyEvent.VK_T, 622.25);
+//        keyToFrequencyMap.put(KeyEvent.VK_G, 659.25);
+//        keyToFrequencyMap.put(KeyEvent.VK_H, 698.46);
+//        keyToFrequencyMap.put(KeyEvent.VK_U, 739.99);
+//        keyToFrequencyMap.put(KeyEvent.VK_J, 783.99);
+//        keyToFrequencyMap.put(KeyEvent.VK_I, 830.61);
+//        keyToFrequencyMap.put(KeyEvent.VK_K, 880.00);
+        
 
-
-        keyToFrequencyMap.put(KeyEvent.VK_A, 440.00);
-        keyToFrequencyMap.put(KeyEvent.VK_W, 466.16);
-        keyToFrequencyMap.put(KeyEvent.VK_S, 493.88);
-        keyToFrequencyMap.put(KeyEvent.VK_D, 523.25);
-        keyToFrequencyMap.put(KeyEvent.VK_R, 554.37);
-        keyToFrequencyMap.put(KeyEvent.VK_F, 587.33);
-        keyToFrequencyMap.put(KeyEvent.VK_T, 622.25);
-        keyToFrequencyMap.put(KeyEvent.VK_G, 659.25);
-        keyToFrequencyMap.put(KeyEvent.VK_H, 698.46);
-        keyToFrequencyMap.put(KeyEvent.VK_U, 739.99);
-        keyToFrequencyMap.put(KeyEvent.VK_J, 783.99);
-        keyToFrequencyMap.put(KeyEvent.VK_I, 830.61);
-        keyToFrequencyMap.put(KeyEvent.VK_K, 880.00);
+        keyToFrequencyMap.put(KeyEvent.VK_A, 440.00); //KeyEvent.VK_A 0
+        keyToFrequencyMap.put(KeyEvent.VK_W, 466.16); //KeyEvent.VK_W 1
+        keyToFrequencyMap.put(KeyEvent.VK_S, 493.88); //KeyEvent.VK_S 2
+        keyToFrequencyMap.put(KeyEvent.VK_E, 523.25); //KeyEvent.VK_D 3
+        keyToFrequencyMap.put(KeyEvent.VK_D, 554.37); //KeyEvent.VK_R 4
+        keyToFrequencyMap.put(KeyEvent.VK_F, 587.33); //KeyEvent.VK_F 5
+        keyToFrequencyMap.put(KeyEvent.VK_T, 622.25); //KeyEvent.VK_T 6
+        keyToFrequencyMap.put(KeyEvent.VK_G, 659.25); //KeyEvent.VK_G 7
+        keyToFrequencyMap.put(KeyEvent.VK_Y, 698.46); //KeyEvent.VK_H 8
+        keyToFrequencyMap.put(KeyEvent.VK_H, 739.99); //KeyEvent.VK_U 9
+        keyToFrequencyMap.put(KeyEvent.VK_U, 783.99); //KeyEvent.VK_J 10
+        keyToFrequencyMap.put(KeyEvent.VK_J, 830.61); //KeyEvent.VK_I 11
+        keyToFrequencyMap.put(KeyEvent.VK_K, 880.00); //KeyEvent.VK_I .12
+        
     }
 
     public void run() {
@@ -123,6 +139,7 @@ public class SynthApp {
                         isKeyPressed = true;
                     }
                 }
+                
                 pianoPanel.pressKey(e.getKeyCode());
                 //panel pianina
             }

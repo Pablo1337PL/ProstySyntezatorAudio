@@ -24,28 +24,10 @@ public class PianoPanel extends JPanel {
 			this.keyCode = keyCode;
 		}
 	}
-	
-    private static final Map<Integer, Double> keyToFrequencyMap = new HashMap<>();
     private static final Map<Integer, Tile> keyToButtonMap = new HashMap<>();
     
-    
-    static {
-        keyToFrequencyMap.put(KeyEvent.VK_A, 440.00);
-        keyToFrequencyMap.put(KeyEvent.VK_W, 466.16);
-        keyToFrequencyMap.put(KeyEvent.VK_S, 493.88);
-        keyToFrequencyMap.put(KeyEvent.VK_D, 523.25);
-        keyToFrequencyMap.put(KeyEvent.VK_R, 554.37);
-        keyToFrequencyMap.put(KeyEvent.VK_F, 587.33);
-        keyToFrequencyMap.put(KeyEvent.VK_T, 622.25);
-        keyToFrequencyMap.put(KeyEvent.VK_G, 659.25);
-        keyToFrequencyMap.put(KeyEvent.VK_H, 698.46);
-        keyToFrequencyMap.put(KeyEvent.VK_U, 739.99);
-        keyToFrequencyMap.put(KeyEvent.VK_J, 783.99);
-        keyToFrequencyMap.put(KeyEvent.VK_I, 830.61);
-        keyToFrequencyMap.put(KeyEvent.VK_K, 880.00);
-    }
-
     public PianoPanel() {
+    	//createFreqMap();
         this.setLayout(new GridBagLayout()); // Use GridBagLayout to center components
         JLayeredPane pianoKeysPane = createPianoKeysPane();
         this.add(pianoKeysPane); // Add the pianoKeysPane directly to the panel
@@ -54,7 +36,7 @@ public class PianoPanel extends JPanel {
 	public void pressKey(int keyCode) {
 		Tile keyButton = keyToButtonMap.get(keyCode);
 		if (keyButton != null) {
-			keyButton.setBackground(keyButton.getIsBlack() ? Color.DARK_GRAY : Color.YELLOW); // Highlight key
+			keyButton.setBackground(keyButton.getIsBlack() ? Color.BLUE : Color.CYAN); // Highlight key
 		}
 	}
 	
@@ -69,7 +51,7 @@ public class PianoPanel extends JPanel {
 		Component component = getComponentAt(mousePoint);
 		if (component instanceof Tile) {
 			Tile keyButton = (Tile) component;
-			keyButton.setBackground(keyButton.getIsBlack() ? Color.DARK_GRAY : Color.YELLOW); // Highlight key
+			keyButton.setBackground(keyButton.getIsBlack() ? Color.BLUE : Color.CYAN); // Highlight key
 			return keyButton.getKeyCode();
 		}
 		return -1; // No key was clicked
@@ -88,85 +70,89 @@ public class PianoPanel extends JPanel {
     
     private JLayeredPane createPianoKeysPane() {
         JLayeredPane pianoKeysPane = new JLayeredPane();
-        int pianoWidth = 400;
+        int pianoWidth = 1000;
         int pianoHeight = 200;
         pianoKeysPane.setPreferredSize(new Dimension(pianoWidth, pianoHeight));
 
         // Create white keys
-        int whiteKeyWidth = 50;
+        int iloscOktaw = 6; // 1, 2, ..., 6
+        final int srodkowaOktawa = 2; //0, 1, 2, ..., iloscOktaw -1
+        int whiteKeyWidth = 20; // mod 4 = 0
         int whiteKeyHeight = 150;
-        int[] whiteKeyOrder = {
-            KeyEvent.VK_A, KeyEvent.VK_S, KeyEvent.VK_D, KeyEvent.VK_F, KeyEvent.VK_G, KeyEvent.VK_H, KeyEvent.VK_J, KeyEvent.VK_K
-        };
-        int xPosition = 0;
-        for (int key : whiteKeyOrder) {
-            Tile whiteKey = new Tile(false);
-            whiteKey.setKeyCode(key);
-            whiteKey.setBounds(xPosition, 0, whiteKeyWidth, whiteKeyHeight);
-            whiteKey.setBackground(Color.WHITE);
-            whiteKey.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-            whiteKey.setFocusable(false);
-            keyToButtonMap.put(key, whiteKey);
-            pianoKeysPane.add(whiteKey, JLayeredPane.DEFAULT_LAYER); // Add white keys to the default layer
-            xPosition += whiteKeyWidth;
-        }
-
-        // Create black keys
-        int blackKeyWidth = 30;
+        int blackKeyWidth = whiteKeyWidth / 2;
         int blackKeyHeight = 100;
-        int[] blackKeyOrder = {
-            KeyEvent.VK_W, KeyEvent.VK_R, KeyEvent.VK_T, KeyEvent.VK_U, KeyEvent.VK_I
-        };
-        int[] blackKeyOffsets = {35, 85, 185, 235, 285}; // Relative x-positions for black keys
-        for (int i = 0; i < blackKeyOrder.length; i++) {
-            Tile blackKey = new Tile(true);
-            blackKey.setKeyCode(blackKeyOrder[i]);
-            blackKey.setBounds(blackKeyOffsets[i], 0, blackKeyWidth, blackKeyHeight);
-            blackKey.setBackground(Color.BLACK);
-            blackKey.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
-            blackKey.setFocusable(false);
-            keyToButtonMap.put(blackKeyOrder[i], blackKey);
-            pianoKeysPane.add(blackKey, JLayeredPane.PALETTE_LAYER); // Add black keys to the palette layer (on top of white keys)
-        }
-
-        // Add key listener to handle key events
-//        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(e -> {
-//            if (e.getID() == KeyEvent.KEY_PRESSED) {
-//                Tile keyButton = keyToButtonMap.get(e.getKeyCode());
-//                if (keyButton != null) {
-//                    keyButton.setBackground(keyButton.getIsBlack() ? Color.DARK_GRAY : Color.YELLOW); // Highlight key
-//                }
-//            } else if (e.getID() == KeyEvent.KEY_RELEASED) {
-//                Tile keyButton = keyToButtonMap.get(e.getKeyCode());
-//                if (keyButton != null) {
-//                    keyButton.setBackground(keyButton.getIsBlack() ? Color.BLACK : Color.WHITE); // Reset key color
-//                }
-//            }
-//            return false;
-//        });
-      
         
-//		MouseAdapter mouseAdapter = new MouseAdapter() {
-//			@Override
-//			public void mousePressed(MouseEvent e) {
-//				Component component = pianoKeysPane.getComponentAt(e.getPoint());
-//				if (component instanceof Tile) {
-//					Tile keyButton = (Tile) component;
-//					keyButton.setBackground(keyButton.getIsBlack() ? Color.DARK_GRAY : Color.YELLOW); // Highlight key
-//					
-//				}
-//			}
-//
-//			@Override
-//			public void mouseReleased(MouseEvent e) {
-//				Component component = pianoKeysPane.getComponentAt(e.getPoint());
-//				if (component instanceof Tile) {
-//					Tile keyButton = (Tile) component;
-//					keyButton.setBackground(keyButton.getIsBlack() ? Color.BLACK : Color.WHITE); // Reset key color
-//				}
-//			}
-//		};
-
+        boolean[] isBlack = {false, true, false, true, false, false, true, false, true, false, true, false};
+        
+        int xLastPosition=iloscOktaw*12*whiteKeyWidth;
+        int xPosition=pianoWidth-2*xLastPosition/3;
+        
+        for(int k =0; k<iloscOktaw;++k) {
+        	for(int i=0;i<12;++i) {
+	        	Tile key = new Tile(isBlack[i]);
+	        	key.setKeyCode(1200*k+i);
+	        	
+	        	if(isBlack[i]) {
+	        		key.setBounds(xPosition-blackKeyWidth/2, 0, blackKeyWidth, blackKeyHeight);
+	        	}
+	        	else {
+	        		key.setBounds(xPosition, 0, whiteKeyWidth, whiteKeyHeight);
+	        		xPosition += whiteKeyWidth;
+	        	}
+	        	
+	        	key.setBackground(key.getIsBlack() ? Color.BLACK : Color.WHITE);
+	            key.setBorder(BorderFactory.createLineBorder(key.getIsBlack() ? Color.DARK_GRAY : Color.BLACK));
+	            key.setFocusable(false);
+	            
+	            switch(key.getKeyCode()) {
+				case 0 + srodkowaOktawa*1200:
+					keyToButtonMap.put(KeyEvent.VK_A, key);
+					break;
+				case 1 + srodkowaOktawa*1200:
+					keyToButtonMap.put(KeyEvent.VK_W, key);
+				    break;
+			    case 2 + srodkowaOktawa*1200:
+			    	keyToButtonMap.put(KeyEvent.VK_S, key);
+				    break;
+			    case 3 + srodkowaOktawa*1200:
+			    	keyToButtonMap.put(KeyEvent.VK_E, key);
+			    	break;
+			    case 4 + srodkowaOktawa*1200:
+			    	keyToButtonMap.put(KeyEvent.VK_D, key);
+			    	break;
+			    case 5 + srodkowaOktawa*1200:
+			    	keyToButtonMap.put(KeyEvent.VK_F, key);
+			    	break;
+			    case 6 + srodkowaOktawa*1200:
+			    	keyToButtonMap.put(KeyEvent.VK_T, key);
+			    	break;
+			    case 7 + srodkowaOktawa*1200:
+			    	keyToButtonMap.put(KeyEvent.VK_G, key);
+			    	break;
+			    case 8 + srodkowaOktawa*1200:
+			    	keyToButtonMap.put(KeyEvent.VK_Y, key);
+			    	break;
+			    case 9 + srodkowaOktawa*1200:
+			    	keyToButtonMap.put(KeyEvent.VK_H, key);
+			        break;
+			    case 10 + srodkowaOktawa*1200:
+			    	keyToButtonMap.put(KeyEvent.VK_U, key);
+			    	break;
+			    case 11 + srodkowaOktawa*1200:
+			    	keyToButtonMap.put(KeyEvent.VK_J, key);
+			    	break;
+			    case 0 + (srodkowaOktawa+1)*1200: //kolejna oktawa
+			    	keyToButtonMap.put(KeyEvent.VK_K, key);
+			    	break;
+			    default:
+			    	keyToButtonMap.put(1200*k+i, key);
+			    	break;
+	            }
+	            
+	            pianoKeysPane.add(key, key.getIsBlack() ? JLayeredPane.PALETTE_LAYER : JLayeredPane.DEFAULT_LAYER); // Add tiles
+	        }
+        }
+        
         return pianoKeysPane;
     }
 }
