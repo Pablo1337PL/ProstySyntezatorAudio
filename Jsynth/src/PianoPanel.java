@@ -27,11 +27,13 @@ public class PianoPanel extends JPanel {
     private static final Map<Integer, Tile> keyToButtonMap = new HashMap<>();
     
     public PianoPanel() {
-    	//createFreqMap();
-        this.setLayout(new GridBagLayout()); // Use GridBagLayout to center components
+        this.setLayout(new GridBagLayout()); // Center components in this panel
+        // Create the piano keys pane
         JLayeredPane pianoKeysPane = createPianoKeysPane();
-        this.add(pianoKeysPane); // Add the pianoKeysPane directly to the panel
+        // Add the piano keys pane to the panel
+        this.add(pianoKeysPane);
     }
+
     
 	public void pressKey(int keyCode) {
 		Tile keyButton = keyToButtonMap.get(keyCode);
@@ -73,9 +75,10 @@ public class PianoPanel extends JPanel {
         int pianoWidth = 1000;
         int pianoHeight = 200;
         pianoKeysPane.setPreferredSize(new Dimension(pianoWidth, pianoHeight));
-
+        pianoKeysPane.setMinimumSize(new Dimension(pianoWidth, pianoHeight));
+        
         // Create white keys
-        int iloscOktaw = 6; // 1, 2, ..., 6
+        int iloscOktaw = 6; // 1, 2, ..., 8
         final int srodkowaOktawa = 2; //0, 1, 2, ..., iloscOktaw -1
         int whiteKeyWidth = 20; // mod 4 = 0
         int whiteKeyHeight = 150;
@@ -84,8 +87,8 @@ public class PianoPanel extends JPanel {
         
         boolean[] isBlack = {false, true, false, true, false, false, true, false, true, false, true, false};
         
-        int xLastPosition=iloscOktaw*12*whiteKeyWidth;
-        int xPosition=pianoWidth-2*xLastPosition/3;
+        int xLastPosition=(iloscOktaw)*7*whiteKeyWidth; // 7 białych klawiszy w oktawie
+        int xPosition= (pianoWidth - xLastPosition)/2;
         
         for(int k =0; k<iloscOktaw;++k) {
         	for(int i=0;i<12;++i) {
@@ -104,6 +107,8 @@ public class PianoPanel extends JPanel {
 	            key.setBorder(BorderFactory.createLineBorder(key.getIsBlack() ? Color.DARK_GRAY : Color.BLACK));
 	            key.setFocusable(false);
 	            
+	            
+	            // jakiś lepszy sposób przypisywania klawiszy?
 	            switch(key.getKeyCode()) {
 				case 0 + srodkowaOktawa*1200:
 					keyToButtonMap.put(KeyEvent.VK_A, key);
