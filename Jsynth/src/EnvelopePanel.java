@@ -1,3 +1,4 @@
+
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -8,10 +9,10 @@ public class EnvelopePanel extends JPanel {
     private final EnvelopeGenerator envelopeGenerator;
     private final EnvelopeVisualizer envelopeVisualizer;
 
-    final DKnob attackKnob;
-    final DKnob decayKnob;
-    final DKnob sustainKnob;
-    final DKnob releaseKnob;
+    public final DKnob attackKnob;
+    public final DKnob decayKnob;
+    public final DKnob sustainKnob;
+    public final DKnob releaseKnob;
 
     private final JFrame parentFrame; // Referencja do głównego okna
 

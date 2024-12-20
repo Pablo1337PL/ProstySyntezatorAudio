@@ -1,3 +1,4 @@
+
 import com.jsyn.JSyn;
 import com.jsyn.Synthesizer;
 import com.jsyn.unitgen.FilterHighPass;
@@ -50,7 +51,6 @@ public class SoundGenerator {
     EnvelopeGenerator envelope;
     private long currentSampleIndex = 0;
     private final double sampleRate = 44100.0;
-
 
 
     public SoundGenerator() {
@@ -286,12 +286,4 @@ public class SoundGenerator {
     public double[] getFilterCutoffs() {
         return new double[]{lowPassFilter.frequency.get(), highPassFilter.frequency.get()};
     }
-
-
-
-
-
-
-
-
 }

@@ -1,3 +1,4 @@
+
 public class EnvelopeGenerator {
     private double attackTimeMs = 100.0;
     private double decayTimeMs = 200.0;
